@@ -9,6 +9,7 @@ In this assignment, we will be working with a dataset containing information abo
 You will need to load the tidyverse library
 
 ```{r}
+library(tidyverse)
 ```
 
 Then you'll load the data from the web. The URL for the data is: https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/white_house_salaries_2025.csv. You will create a dataframe called `wh_salaries` that contains the data from this URL.
@@ -16,19 +17,26 @@ Then you'll load the data from the web. The URL for the data is: https://raw.git
 ### Task 2: Load the Data and Describe It
 
 ```{r}
+
+wh_salaries <- read_csv("https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/white_house_salaries_2025.csv")
+
 ```
 ### Task 3: Describe the Data
 
 You should examine that dataframe carefully by clicking on it in the Environment tab in RStudio. Write a couple of sentences describing the categories of incidents. From a reporting standpoint, what stands out to you about this data? Are there any salary values that will cause problems for analysis?
 
-ANSWER HERE
+The data has five categories: name, status (of employment), salary, pay basis, position title. From a reporting standpoint, the data stands out to me because of how many positions there are in the White House and the salary range is very wide from about 65,000 to arounf 200,000. There are some salaries that would cause probelms for analysis because some staff are listed as detailees and for some employees the recorded salary is 0.
 
 ### Task 4: Calculate the Mean and Median of the Salaries
 
 Write code to calculate the mean and median of the salaries in the dataset using the `summarize()` function. You don't need to make a new dataframe, just display the results.
 
 ```{r}
-
+wh_salaries %>%
+  summarize(
+    mean_salary = mean(SALARY, na.rm = TRUE),
+    median_salary = median(SALARY, na.rm = TRUE)
+  )
 ```
 
 ### Task 5: Add in the minimum and maximum salaries
@@ -36,6 +44,13 @@ Write code to calculate the mean and median of the salaries in the dataset using
 Take the code you just wrote and add in the minimum and maximum salaries (the functions for that are `min()` and `max()`). Your results should show four columns: mean_salary, median_salary, min_salary, max_salary.
 
 ```{r}
+wh_salaries %>%
+  summarize(
+    mean_salary = mean(SALARY, na.rm = TRUE),
+    median_salary = median(SALARY, na.rm = TRUE),
+    min_salary = min(SALARY, na.rm = TRUE),
+    max_salary = max(SALARY, na.rm = TRUE)
+  )
 
 ```
 
@@ -43,10 +58,11 @@ Take the code you just wrote and add in the minimum and maximum salaries (the fu
 
 Write a couple of sentences describing the results of your analysis. What do the mean and median salaries tell you about the data? What do the minimum and maximum salaries tell you? Are there any outliers in the data?
 
-ANSWER HERE
+The mean salary is higher than the median which tells me that the data is skewed upward due to a few high paid employees. Therefore, most employees earn close to the middle of the range of salaries. The minimum indicates that there are low effort/entry level jobs while the maximum salary shows that the some jobs get paid a large amount and that there is a limit to the most paid White House staffer. The outliers are the high salaries because the majority of employees are around the same range with a few of the larger more important roles getting paid a lot more. 
 
 ### Task 7: Story Idea
 
 Based on the data, what is your best story idea? What is the next step you would take to develop that story idea?
 
-ANSWER HERE
+Based on the data, I would write a story regarding the salary divide between senior roles versus entry level position in the White House. For example, positions including presidential writer and associate director for presidential gifts receive 65,500 while the position titles advisor makes 225,700. The next step to develop this story is finding the highest paid employees and the lowest and then comparing their positions responsibilities. I then would contact them for an interview to understand more of the staff positions and why some are paid way more than others. 
+
