@@ -44,7 +44,7 @@ crimes_with_rates <- crimes |> mutate(violent_rate = violent_crime_total/populat
 ### Task 6: Describe our results
 
 Write a few sentences about what you found in the data. What years had the highest crime rates? What years had the lowest crime rates? Does the pattern match your expectations?
-
+The data shows that Maryland is actually getting safer and safer when you look at the total crime rate from 1975 to 2020. In 1975 it was 591.0371 total crime and in 2020 it was 203.8435 total crime. Similarly when you look at the crime rates for violent and property crime rates for each year. In 1975 the violent crime was at 70.95656 and then went up and down even getting to 99.92 in 1992 but in more recent years, when we look at 2020 the violent crime rate is at 41.22480. Overall showing that Maryland is getting safer. This does match my expectations because of how out technology has improved to keep people more safe. 
 
 
 
