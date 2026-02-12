@@ -9,6 +9,8 @@ In this assignment, we will be working with a dataset of total crimes reported b
 You will need to load the tidyverse library and the janitor library
 
 ```{r}
+library(tidyverse)
+library(janitor)
 ```
 
 Then you'll load the data from the web. The URL for the data is: https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/md_cities_crime_2019_2020.csv. You will create a dataframe called `md_cities` that contains the data from this URL.
@@ -16,39 +18,47 @@ Then you'll load the data from the web. The URL for the data is: https://raw.git
 ### Task 2: Load the Data
 
 ```{r}
+md_cities <- read_csv("https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/md_cities_crime_2019_2020.csv") |> clean_names()
 ```
 ### Task 3: Calculating Rates
 
 Calculate violent and property crime rates for each city for both years using `mutate()`. You'll create four new columns: `violent_rate_2019`, `property_rate_2019`, `violent_rate_2020`, and `property_rate_2020`. You'll need to figure out the proper unit rate, given that there are varying populations. There's no perfect choice; choose the one that works best for you. Save the results to a new dataframe called `md_cities_rates`.
 
 ```{r}
+md_cities_rates <- md_cities |> mutate( violent2019  = (violent2019 / pop2019) * 10000, property2019 = (property2019 / pop2019) * 10000, violent2020  = (violent2020 / pop2020) * 10000,property2020 = (property2020 / pop2020) * 10000)
 ```
 
 ### Task 4: Describe the Rates
 
 Examine the new dataframe, `md_cities_rates`, by clicking on it in the Environment tab in RStudio and sorting by the rate columns. Write a couple of sentences about the results, comparing and contrasting the cities with the highest rates (both violent and property) in 2019 and 2020. Do you see any patterns? What does this tell you about crime in Maryland cities? What's the story here?
 
-ANSWER HERE
+For a lot of the counties, it seems that the violent crime rates have increased from 2019 to 2020, while property crime rates seemed to be a bit more consistent from 2019 to 2020. The largest violent crime rate per 10,000 people in 2020 was 239.7 in Worcester, Ocean City which has previously been 131 in 2019. On the opposite end, there are multiple counties that show a 0 violent crime rate. Regarding propery crime rates, the highest in 2020 was also in Worcester, Ocean City with a rate of 1212.8. This was an increase from their 2019 rate of 1036.9. Due to this information, I would focus my story around Ocean City and see why their rates are higher than the other counties/cities. 
 
 
 ### Task 5: Calculate Percentage Change
 
 Let's add two percentage change columns to your dataframe: one for violent crime rates and one for property crime rates. You'll calculate the percentage change between 2019 and 2020 for each city. Save the results to a new dataframe called `md_cities_change`.
 
-```{r}
+```{r} 
+md_cities_change <- md_cities_rates |> mutate(
+    violent_rate_pct_change = ((violent2020 - violent2019) / violent2019) * 100,
+    property_rate_pct_change = ((property2020 - property2019) / property2019) * 100
+  )
 ```
 
 ### Task 7: Describe Percentage Changes
 
 Look at the `md_cities_change` dataframe by clicking on it in the Environment tab in RStudio. Write a couple of sentences describing the percentage change results. What's more interesting here, the patterns or the outliers? What's the story in the data?
 
-ANSWER HERE
+The outliers look more interesting in this data because of how percentage change is more sensitive to small numbers. There really doesn't seem to be a statewide trend but more so shows how crime rates shifted unevenly. Smaller cities show big changes while the larger cities show relatively smaller decreases or increases. You can see this when you really look at the larger cities like Hagerstown, MD. In Hagerstown, the violent percent change was 4.9 and the propery percent change was -3.65, this is because it has a larger population so it didn't have as dramatic as a change as the smaller MD cities.  
 
 ### Task 8: Tell the Best Story
 
 Write up a lede and nutgraf of a story with the _best_ story idea you've found in this assignment. The lede should be a single sentence that summarizes the most important information in the data. The nutgraf should be a paragraph that provides more context and explains why the data is important.
 
-ANSWER HERE
+Worcester County's Ocean City recorded Maryland's highest violent and property crime rate per 10,000 residents in 2020, with a 82.89 violent rate percentage change from 2019 to 2020. 
+
+I would use some of that stats that I found above including how the largest violent crime rate per 10,000 people in 2020 was 239.7 in Worcester, Ocean City which has previously been 131 in 2019. Along with how the highest propery crime rates in 2020 was also in Worcester, Ocean City with a rate of 1212.8. This was an increase from their 2019 rate of 1036.9. I think this data is important because I am very interested to know what changed between 2019 to 2020.  
 
 ### Task 9: Save Your Work and Put it on GitHub
 
