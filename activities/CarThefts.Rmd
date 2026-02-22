@@ -28,6 +28,8 @@ car_thefts |> summarize(mean = mean(count), sd = sd(count))
 ### Task 4: Create a histogram of the number of car thefts
 
 ```{r}
+mean_count <- mean(car_thefts$count, na.rm = TRUE)
+sd_count <- sd(car_thefts$count, na.rm = TRUE)
 car_thefts |> 
   ggplot() + 
   geom_histogram(aes(x = count), binwidth = 2) +
@@ -40,12 +42,13 @@ car_thefts |>
 
 
 ### Task 5: Add a line to the histogram that shows the mean of the number of car thefts, and two other lines to show one standard deviation in both directions
-
+I added this into task 4 after I ran what was originally in 4. I had to use google because I wasn't in class and didn't know if there was a specific way to do this for histograms. 
 
 ### Task 6: Describe your results
 
 Is the distribution normal or skewed in one direction? Write a sentence in which you describe the range of the data covered by one standard deviation from the mean on both sides - how much of the data falls in that range?
 
+This data is slightly skewed left. One standard deviation from the mean ranges from abour 9 to 17 car thefts, with most of the data falling in between those two points, so most of the data is clustered near the average. 
 
 
 When you are done, save your work, switch to GitHub Desktop, then add, commit and push your changes to GitHub and submit the URL of the notebook in ELMS.
