@@ -1,6 +1,6 @@
 ---
 title: "Baltimore County 911 Overdose Calls Analysis"
-author: "YOUR NAME HERE"
+author: "Audrey Ring"
 ---
 
 ```{r setup, include=FALSE}
@@ -74,7 +74,7 @@ summary(daily_calls$call_count)
 
 Let's visualize the time series of daily calls. What patterns do you see? If you had to draw horizontal lines that would highlight unusual days, where would those lines be?
 
-ANSWER HERE
+The biggest thing that stands out to me is that in October there seems to be a spike in the data. During spring there also tends to be more calls. While, on the other hand, at the end of the chart near February it seems to have a low number of calls. It also looks like on new years day there is a spike in calls. 
 
 ```{r daily-calls-plot}
 # Plot daily call volume
@@ -137,7 +137,7 @@ unusual_days |>
 
 Let's visualize these unusual days in the context of the full dataset. How do they differ from your answer on Task 3?
 
-ANSWER HERE
+It is similar to my answer in task 3, however, in this one you can see that for the unusually low days there are less at the start of the graph and more towards the end. While there is a spike at new years, then there are a lot of unusually low days that follow. 
 
 ```{r plot-unusual-days}
 # Create a clean factor for the plot legend
@@ -207,7 +207,7 @@ ggplot(dow_summary, aes(x = day_of_week, y = avg_calls)) +
 
 We can also calculate z-scores that account for the day of the week pattern. How would you describe the day with the highest z-score without using the term "z-score"?
 
-ANSWER HERE
+Tuesday ad Thursday is shown to be the highest day of 3.3 and 3.09 which means that it is 3 standard deviation points away from the mean. This means that it is above the 95th percentile, meaning that it is extremely rare. 
 
 ```{r day-of-week-z-scores}
 # Calculate day-of-week adjusted z-scores
@@ -298,5 +298,5 @@ top_outliers |> kable(digits = 2)
 
 Based on our z-score analysis, what are some potential angles for reporting? What would your next steps be and what would you tell an editor about your findings?
 
-ANSWER HERE
+I would definitely look into October as it was the highest spike (huge outlier) in calls and I would want to investigate why that is. Another pattern to look at would be to look at July since the 2nd and 3rd highest spike are only a few days apart. This was about a bad batch of drugs which would be an interesting story as well. 
 

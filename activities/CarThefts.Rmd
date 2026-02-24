@@ -42,6 +42,7 @@ car_thefts |>
 
 
 ### Task 5: Add a line to the histogram that shows the mean of the number of car thefts, and two other lines to show one standard deviation in both directions
+             
 I added this into task 4 after I ran what was originally in 4. I had to use google because I wasn't in class and didn't know if there was a specific way to do this for histograms. 
 
 ### Task 6: Describe your results
