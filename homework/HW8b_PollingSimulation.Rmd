@@ -136,4 +136,4 @@ Based on my simulations, if there was a poll of 200 respondents there would like
 
 I would want to know how many white evangelical respondents were included in the poll. White Evangelicals only make up 10% of the population so even though the poll sampled 400 people that would include about 40 respondents. I would also want to know how the sample was collected and what sampling method was used because sometimes some methods have a higher risk of error. 
 
-When finished, save your work, switch to GitHub Desktop, then add, commit and push your changes to GitHub and submit the URL of the notebook in ELMS.
+When finished, save your work, switch to GitHub Desktop, then add, commit and push your changes to GitHub and submit the URL of the notebook in ELMS. 
