@@ -5,7 +5,7 @@ date: "2025-04-01"
 
 ```{r setup, include=FALSE}
 library(knitr)
-install.packages("kableExtra")
+#install.packages("kableExtra")
 library(kableExtra)
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 library(tidyverse)
@@ -92,11 +92,13 @@ ggplot(nonvoters_data, aes(x = weight)) +
 
 **Questions:**
 
-1. What is the range of weights in this dataset?
+1. What is the range of weights in this dataset? The weights range from about 0.23 to 3.04.
 
-2. What does it mean when a respondent has a weight of 0.23? What about 3.04?
+2. What does it mean when a respondent has a weight of 0.23? What about 3.04? A weight of 0.23 means the respondent is over represented in the sample. Their response is scaled down and counts as less than one full person. Meanwhile, a weight of 3.04 means the respondent is underrepresented. Their response is scaled up and counts as about three people in the analysis.
 
 3. Why might some respondents be weighted more heavily than others?
+Some groups are less likely to respond to surveys based on age, gender, income levels, etc. To make the sample better reflect the real population,
+underrepresented groups are given higher weights while over represented groups are given lower weights.
 
 # Exercise 1: Voter Categories and Weighting
 
@@ -232,7 +234,10 @@ kable(comparison, digits = 1, caption = "Difference Between Weighted and Unweigh
 **Answer These Questions:**
 
 1. Which voter category shows the biggest difference between weighted and unweighted results?
+The rarely/never voters show the biggest difference. Their "Yes" responses drop by 3.6 percentage points, while “No” and “Unsure” both increase.
 
 2. How might these differences affect reporting on likely voter turnout?
+These differences suggest that unweighted data may overestimate how many infrequent voters plan to vote. If someone used only unweighted results, they might report higher turnout among “rarely/never” voters than actually exists. 
 
 3. Why do you think these differences exist? What does this tell us about who might be over or under-represented in the sample?
+The differences likely exist because “rarely/never” voters are over represented in the sample or differ demographically from the general population. Weighting adjusts for this by reducing their influence/power. Some groups were too heavily represented in the unweighted data while other groups were underrepresented and need more weight.
