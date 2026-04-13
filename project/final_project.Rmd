@@ -1,0 +1,19 @@
+```{r}
+
+library(tidyverse)
+stadiums <- read_csv("stadiums-geocoded 2.csv")
+```
+
+```{r}
+scores <- read_csv("cfb_box-scores_2002-2025.csv")
+```
+
+
+```{r}
+glimpse(stadiums)
+glimpse(scores)
+```
+The scores data contains 19,843 rows and 58 columns showing the scores from every college football game ranging from 2002-2025.The imporant columns for me in this one are score_home and score_away to see the final scores, attendance, season, week and date. I will also be able to see the away team's rank and home team's rank. One thing I will have to look for in this set is neutral which indicates a neutral site and it is true or false. Another problem with this set is that there are a lot of N/A answers for a lot of the earlier rows so I will need to figure out how to make the stats reliable. 
+
+The stadiums data has 253 rows and 11 columns that show every ncaa football stadium location (city, state, latitude, longitude) and venue details (stadium, capacity, built, expanded) as well as conference. Since it shows latitude and longitude, I could map it using a plot for my final. 
+
