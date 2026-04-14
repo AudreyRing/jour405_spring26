@@ -50,4 +50,18 @@ matches |>
 ### Task 6: Describe the results of both the correlation calculation and the scatterplot.
 The correlation of 0.018 is extremely close to zero which means there is basically no linear relationship. Meaning, fouling more or less doesn't seem to have anything to do with winning or losing by more goals. The scatterplot further shows this. The dots are scattered all over the place no matter the goal diff and the line is almost flat, there isn't a pattern. With both the calculation and the scatterplot it doesn't look like fouls matter much when it comes the the outcome of matches. 
 
+### Task 7:Choose another variable and repeat steps from Task 4 and 5. Then describe the results.
+
+```{r}
+matches |> summarize(correlation = cor(corners, goal_diff, method="pearson"))
+```
+```{r}
+matches |> 
+  ggplot() +
+  geom_point(aes(x=goal_diff, y=corners)) +
+  geom_smooth(aes(x=goal_diff, y=corners), method="lm")
+```
+The correlation of 0.38 shows a moderate positive relationship between corners and goal diff. Meaning the teams that win by more goals, tend to have more corner kicks. But, the relationship isn't super strong. The scattersplot shows the positive correlations and shows teams with positive goal diff tend to have more corner kicks 
+
+
 When you are done, save your work, switch to GitHub Desktop, then add, commit and push your changes to GitHub and submit the URL of the notebook in ELMS.
