@@ -48,6 +48,6 @@ matches |>
 
 
 ### Task 6: Describe the results of both the correlation calculation and the scatterplot.
-
+The correlation of 0.018 is extremely close to zero which means there is basically no linear relationship. Meaning, fouling more or less doesn't seem to have anything to do with winning or losing by more goals. The scatterplot further shows this. The dots are scattered all over the place no matter the goal diff and the line is almost flat, there isn't a pattern. With both the calculation and the scatterplot it doesn't look like fouls matter much when it comes the the outcome of matches. 
 
 When you are done, save your work, switch to GitHub Desktop, then add, commit and push your changes to GitHub and submit the URL of the notebook in ELMS.
