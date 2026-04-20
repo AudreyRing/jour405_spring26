@@ -3,7 +3,14 @@
 library(tidyverse)
 stadiums <- read_csv("stadiums-geocoded 2.csv")
 ```
-
+The tests I can run: 
+- I can do a ggplot to visualize home vs away win rates or a scatter plot of capacity vs home-field advantage. 
+- summarize() to find means, medians, standard deviations 
+- cor() to show the correlation between capacity and home advantage 
+- t.test to compare hoome win rate vs away win rate 
+- I can use |> filter to keep only the Big Ten teams 
+- group_by(team, location) to organizes the data by each team and whether the game was home or away.
+- Win_pct to find the win percentage for each team at home and away
 ```{r}
 scores <- read_csv("cfb_box-scores_2002-2025.csv")
 ```
@@ -16,4 +23,6 @@ glimpse(scores)
 The scores data contains 19,843 rows and 58 columns showing the scores from every college football game ranging from 2002-2025.The imporant columns for me in this one are score_home and score_away to see the final scores, attendance, season, week and date. I will also be able to see the away team's rank and home team's rank. One thing I will have to look for in this set is neutral which indicates a neutral site and it is true or false. Another problem with this set is that there are a lot of N/A answers for a lot of the earlier rows so I will need to figure out how to make the stats reliable. 
 
 The stadiums data has 253 rows and 11 columns that show every ncaa football stadium location (city, state, latitude, longitude) and venue details (stadium, capacity, built, expanded) as well as conference. Since it shows latitude and longitude, I could map it using a plot for my final. 
+
+
 
