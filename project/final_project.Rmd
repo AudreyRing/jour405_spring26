@@ -1,8 +1,59 @@
 ```{r}
 
 library(tidyverse)
-stadiums <- read_csv("stadiums-geocoded 2.csv")
 ```
+Trials and errors: 
+```{r}
+conf_home_data <- scores |>
+  filter(conf_home = "Big Ten")
+```
+
+```{r}
+conf_home_data <- scores |>
+  filter(conf_home == "big10")
+```
+I did this ^ so that my data set was sorted so it just showed me big 10 teams stats when they are playing at home.
+```{r}
+conf_home_data <- conf_home_data |>
+  mutate(home_win = score_home > score_away)
+```
+I did this to hopefully add a column for when the big ten team wins at home. 
+```{r}
+home_rates <- conf_home_data |>
+  group_by(home) 
+  summarize(
+    tot_home_games = n(),
+    home_wins = sum(home_win),
+    home_win_pct = home_wins / tot_home_games * 100
+  )
+
+home_rates
+```
+```{r}
+home_rates <- conf_home_data |>
+  group_by(home) |>
+  summarize(
+    tot_home_games = n(),
+    home_wins = sum(home_win),
+    home_win_pct = home_wins / tot_home_games * 100
+  )
+
+home_rates
+```
+I did this to give me a table showing each Big 10 teams win percentage in home games spanning from 2002 to 2025 because that it the first claim in my hypothesis. 
+** want to flag for myself to figure out what to do with the obvious dip due to COVID and Oregon, UCLA, USC, and Washington only have 2024-2025 data. 
+
+
+
+
+
+
+
+
+
+
+
+
 The tests I can run: 
 - I can do a ggplot to visualize home vs away win rates or a scatter plot of capacity vs home-field advantage. 
 - summarize() to find means, medians, standard deviations 
@@ -13,6 +64,7 @@ The tests I can run:
 - Win_pct to find the win percentage for each team at home and away
 ```{r}
 scores <- read_csv("cfb_box-scores_2002-2025.csv")
+stadiums <- read_csv("stadiums-geocoded.csv")
 ```
 
 
