@@ -1,6 +1,6 @@
 ---
 title: "Multiple Regression Analysis: Maryland Voter Turnout"
-name: "YOUR NAME HERE"
+name: "Audrey Ring"
 ---
 
 # Introduction
@@ -26,8 +26,7 @@ head(md_turnout)
 
 Before building our model, let's explore the data to understand the variables and their relationships. Examine the correlation matrix to see how the independent variables relate to each other and to the dependent variable (voter turnout). Which variables seem to be correlated? Are there any that are not correlated at all? Also look at the multiple scatterplots. Which variables seem to have a linear relationship with the dependent variable? Which do not?
 
-ANSWER HERE
-
+The variables most correlated with voter turnout are percent unemployed (strong negative), percent white (pretty positive), and median age (pretty positive). Income and percent bachelor's degree are also positively correlated with each other pretty strongly, which could be a problem for modeling later. Population looks nearly uncorrelated with turnout, the circle is very small and faint.
 
 ```{r}
 # Summary statistics
@@ -89,7 +88,7 @@ The coefficients tell us the estimated effect of each independent variable on th
 
 Examine the output of the model, checking the coefficients, residuals, and overall model fit. How well does this multiple variable model predict turnout? Do any of the variables seem to be insignificant? Is this a useful model, based on what you've seen? Why?
 
-ANSWER HERE
+The model actually fits pretty well overall. An r-squared of 0.85 means it explains about 85% of the variation in voter turnout across Maryland counties, which means to me that the model is useful. The adjusted r-squared is only a little less too which is good. The p-value of 2.999e-06 is extremely low, meaning it is highly significant. Some variables seem to be insignficant though like population (p = 0.78) and pct_bachelors_higher (p = 0.84) as well as pct_unemployed (p = 0.16), which is surprising given it had the strongest individual correlation with turnout. Overall I'd say this is a useful starting model but not a final one. 
 
 ```{r}
 # Build initial model with all predictors
@@ -103,19 +102,19 @@ summary(initial_model)
 
 Create three alternative models by adding or removing variables to see if we can improve the model's performance. Turnout will always be the dependent variable, but you should alter the independent variables by removing or adding some. Then compare the models using adjusted R-squared values. Are any of the models significantly better than the others?
 
-ANSWER HERE
+Model 2 is the best with an adjusted r-squared of 0.820, which is  a slight improvement over the full model's 0.802 and that's with two fewer predictors. This makes sense because dropping population and pct_bachelors_higher simplified the model without reducing its explanatory value. Model 3 is pretty much tied with the full model at 0.802, showing that even with just income, median_age, and pct_white we're capturing almost the same amount of variation. Model 4 drops off significantly to 0.615, showing that pct_unemployed and pct_white alone aren't enough on their own.
 
 ```{r}
 # Model 2
-model2 <- lm(turnout ~ REPLACE ME, data = md_turnout)
+model2 <- lm(turnout ~ income + pct_unemployed + median_age + pct_white, data = md_turnout)
 summary(model2)
 
 # Model 3
-model3 <- lm(turnout ~ REPLACE ME, data = md_turnout)
+model3 <- lm(turnout ~ income + median_age + pct_white, data = md_turnout)
 summary(model3)
 
 # Model 4
-model4 <- lm(turnout ~ REPLACE ME, data = md_turnout)
+model4 <- lm(turnout ~ pct_unemployed + pct_white, data = md_turnout)
 summary(model4)
 
 # Compare models
@@ -144,4 +143,4 @@ ggplot(model_comparison, aes(x = reorder(Model, Adjusted_R_squared), y = Adjuste
 
 Without using the words "multiple regression model", describe how you could use this analysis to cover an election or voter participation story.
 
-ANSWER HERE
+You could analyze how factors like income, education, age, and location are associated with voter turnout across different regions. By examining these relationships together, you can identify which factors have the strongest connection to participation while accounting for the influence of others. This helps explain turnout patterns and highlight which communities are more or less likely to vote.
