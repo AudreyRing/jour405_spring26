@@ -1,80 +1,160 @@
-```{r}
+title: Big Ten Home Field Advantage Analysis
+name: Audrey Ring 
+hypothesis: Big Ten teams have a higher win rate at home than away, and the size of this home-field advantage varies by stadium and is associated with factors such as stadium capacity and altitude.
 
+```{r}
 library(tidyverse)
-```
-Trials and errors: 
-```{r}
-conf_home_data <- scores |>
-  filter(conf_home = "Big Ten")
+library(corrplot)
 ```
 
+First, I'll load the necessary libraries and read in both datasets.I'm loading two CSVs, one with game-by-game box score results, and one with stadium metadata including capacity and coordinates. The glimpse is to understand both datasets so I know what I'm working with. 
 ```{r}
-conf_home_data <- scores |>
-  filter(conf_home == "big10")
+scores <- read_csv("cfb_box-scores_2002-2025.csv")
+stadiums <- read_csv("stadiums-geocoded.csv")
+
+glimpse(stadiums)
+glimpse(scores)
 ```
-I did this ^ so that my data set was sorted so it just showed me big 10 teams stats when they are playing at home.
+Evaluation: 
+The scores dataset has 19,843 rows and 58 columns covering every college football game from 2002–2025. My Key columns are score_home, score_away, home, away, conf_home, conf_away, season, and neutral.
+The stadium dataset has 253 rows and 11 columns with venue details including stadium, capacity, latitude, longitude, and conference.
+
+
+Removing the COVID data. Obviously the 2020 season was extremley different as there were no fans. The data from 2020 would distort my home field advantage so I want to filter out that year so that it is more accurate to the normal conditions. 
+```{r}
+scores_no_covid <- scores |>
+    filter(season != 2020)
+```
+Evaluation: This removed the games played in 2020, giving me a cleaner dataset. 
+
+
+To test my hypothesis, I need to see just the games where a Big Ten team is the home team. I also saw in the data there is a column named 'neutral' so I need to also filter those out since that means there is no true home team. 
+```{r}
+conf_home_data <- scores_no_covid  |>
+  filter(conf_home == "big10", neutral == FALSE | is.na(neutral))
+```
+Evaluation: This leaves me with just the games where the Big Ten team is at home and it isn't at a neutral site.  
+
+
+I am going to make a column to show whether the home team won each game. Setting home_win when score_home > score_away will show that. 
 ```{r}
 conf_home_data <- conf_home_data |>
   mutate(home_win = score_home > score_away)
 ```
-I did this to hopefully add a column for when the big ten team wins at home. 
-```{r}
-home_rates <- conf_home_data |>
-  group_by(home) 
-  summarize(
-    tot_home_games = n(),
-    home_wins = sum(home_win),
-    home_win_pct = home_wins / tot_home_games * 100
-  )
+Evaluation: This allows me to easily see when the big ten home teams wins. And ties don't exist in regulation games so this will show all the outcomes accurately. 
 
-home_rates
+
+I need to compare when they are the away team though. So, I need to filter out the games where the big ten team is the away team (excluding neutral sites) and I need to be able to see the away win rate. 
+```{r}
+conf_away_data <- scores_no_covid |>
+  filter(conf_away == "big10", neutral == FALSE | is.na(neutral)) |>
+  mutate(away_win = score_away > score_home)
 ```
+Evaluation: This leaves me with 2 datasets. One shows me when big ten teams are the home team and the other for when the big ten team is away. This will allow the comparison to be a lot easier. 
+ 
+ 
+Now I need to calculate the percentage of each Big Ten team's home win percentage.
 ```{r}
 home_rates <- conf_home_data |>
   group_by(home) |>
   summarize(
     tot_home_games = n(),
-    home_wins = sum(home_win),
+    home_wins = sum(home_win, na.rm = TRUE),
     home_win_pct = home_wins / tot_home_games * 100
-  )
+  )|>
+  arrange(desc(home_win_pct))
 
 home_rates
 ```
-I did this to give me a table showing each Big 10 teams win percentage in home games spanning from 2002 to 2025 because that it the first claim in my hypothesis. 
-** want to flag for myself to figure out what to do with the obvious dip due to COVID and Oregon, UCLA, USC, and Washington only have 2024-2025 data. 
+Evaluation: Looking at this table, you can see there is a large variation in home win percentage across Big Ten teams. Oregon, Ohio State, USC appear at the top while teams that are still building are at the bottom including Maryland, Rutgers, and UCLA. This shows that home field advantage isn't uniform which aligns with the second part of my hypothesis. 
 
 
-
-
-
-
-
-
-
-
-
-
-The tests I can run: 
-- I can do a ggplot to visualize home vs away win rates or a scatter plot of capacity vs home-field advantage. 
-- summarize() to find means, medians, standard deviations 
-- cor() to show the correlation between capacity and home advantage 
-- t.test to compare hoome win rate vs away win rate 
-- I can use |> filter to keep only the Big Ten teams 
-- group_by(team, location) to organizes the data by each team and whether the game was home or away.
-- Win_pct to find the win percentage for each team at home and away
+I need to do the same thing I did but for the away games. I am just going to copy and paste what I just did but change the names to away games. 
 ```{r}
-scores <- read_csv("cfb_box-scores_2002-2025.csv")
-stadiums <- read_csv("stadiums-geocoded.csv")
-```
+away_rates <- conf_away_data |>
+  group_by(away) |>
+  summarize(
+    tot_away_games = n(),
+    away_wins = sum(away_win, na.rm = TRUE),
+    away_win_pct = away_wins / tot_away_games * 100
+  ) |>
+  arrange(desc(away_win_pct))
 
+away_rates
+```
+Evaluation: These percentages are lower across the big ten teams which is what I expected. One thing that jumps out to me in the data is Oregon as their win pct is 100%. 
+
+
+I want to put the two tables together so its easier for me to see and visualize the data. I also need to look at the standard deviation to see how meaningful the numbers are and the variation. 
+```{r}
+advantage <- home_rates |>
+  inner_join(away_rates, by = c("home" = "away")) |>
+  mutate(hfa = home_win_pct - away_win_pct) |>
+  arrange(desc(hfa))
+
+advantage
+```
+```{r}
+summary(home_rates$home_win_pct)
+sd(home_rates$home_win_pct)
+
+summary(away_rates$away_win_pct)
+sd(away_rates$away_win_pct)
+
+summary(advantage$hfa)
+sd(advantage$hfa)
+```
+Evaluation: This shows me that big ten teams win around 65% of their home games, however, they win less than 50% of the away games. This also shows there are no extreme outliers that will skew my overall results. But, what stands out is the home field advantafe ranges from -6.667 to 54.615 which shows that at least one team perfroms worse at home than on the road but another team performs really well. This makes me wonder what is causing that variation. 
+
+
+T-test: I want to see if the home win rate is significantly higher than the away win rate. With my null being that there's no difference between home and away win percentages. 
+```{r}
+t_result <- t.test(advantage$home_win_pct, advantage$away_win_pct, paired = TRUE)
+t_result
+```
+Evaluation: This shows that home field advantafe is statistically signifcant as the t=5.4615 and the p-value is 4.222e-05. Big ten teams, on average, win around 19.6% more at home than away games.
+With the confidence interval, I am 95% confident that the true advantage falls between 12 and 27 percentage points. And due to how small the p-value is that shows that there is no chance the gap is from a random chance.
+
+
+
+Now I need to look at the stadium data. I want to see the correlation tests to see whether stadium capacity and latitude are associated with larger home-field advantages.
+```{r}
+big10_stadiums <- stadiums |>
+  filter(conference == "Big Ten")
+
+advantage_with_stadium <- advantage |>
+  left_join(big10_stadiums, by = c("home" = "team"))
+
+advantage_with_stadium
+
+cor.test(advantage_with_stadium$capacity, advantage_with_stadium$hfa)
+cor.test(advantage_with_stadium$latitude, advantage_with_stadium$hfa)
+```
+Evaluation: Neither correlation is statistically signficant. Both p-values are well above 0.05 (0.434 and 0.3898). Both correlation for capacity and lattitude are also weak. So, although stadiums and lattitude show a slight tendency toward a bigger home field advantages, I can't confidently say that either factor actually drives the difference. 
 
 ```{r}
-glimpse(stadiums)
-glimpse(scores)
-```
-The scores data contains 19,843 rows and 58 columns showing the scores from every college football game ranging from 2002-2025.The imporant columns for me in this one are score_home and score_away to see the final scores, attendance, season, week and date. I will also be able to see the away team's rank and home team's rank. One thing I will have to look for in this set is neutral which indicates a neutral site and it is true or false. Another problem with this set is that there are a lot of N/A answers for a lot of the earlier rows so I will need to figure out how to make the stats reliable. 
+selected_vars <- advantage_with_stadium |>
+  select(hfa, capacity, latitude) |>
+  drop_na()
 
-The stadiums data has 253 rows and 11 columns that show every ncaa football stadium location (city, state, latitude, longitude) and venue details (stadium, capacity, built, expanded) as well as conference. Since it shows latitude and longitude, I could map it using a plot for my final. 
+corr_matrix <- cor(selected_vars)
+corrplot(corr_matrix, method = "circle")
+```
+Evaluation: This matric shows that cpacity and latitude have weak relationships with home field advantage as they are small light blue circles. This confims that stadium size and geography don't soley explaim why some big ten teams play better at home than other big ten teams.
+
+
+
+Story pitch: Not All Home Fields Are Created Equal: Inside the Big Ten's Biggest (and Smallest) Home-Field Advantages 
+
+Main Findings: My analysis of 20 years of Big Ten football teams showed that teams win significantly more often at home than away. The mean home win rate was approximately 65% compared to less than 50% at away games. This difference is statistically signficant as seen during the paired t- test the p-value was 4.222e-05. This confirms the first part of my hypothesis: home-field advantage is real and measurable in the Big Ten. However, the advantage is not evenly distributed. Some programs benefit dramatically from playing at home, while others see little difference between home and away performance. This is the most intersting part because it raises the question of what is driving it then. My correlation analysis showed no signficant relationship between stadium capacity and home field advantage with a correlation of 0.22 and a p-value of 0.434. This means that larger crowds do not meaningfully help the home team. There was a similar pattern when correlating latittude with home field advantage as the correlation was 0.25 with a p-value of 0.39. 
+
+Potential problems: 
+-Ohio State and Michigan have high win rates in both home and away games. Their high win percentages partly reflect talent, not crowd effects. It would help if I had more data to analyze like recruiting rankings and pre-game odds.
+-Some teams are new to the Big Ten (Oregon, UCLA, USC, and Washington) so there is way less data for those teams. 
+-The dataset has many NA values for attendance in earlier seasons, which prevented me from using actual crowd size as a variable.
+
+Reporting plan: 
+Interview with a sports economists because they would be able to provide me with background and answer questions I have to go further with my research. I would also want to interview Big Ten athletes and ask how they feel playing in large vs. small home venues. I would want to know if they feel any difference playing at a huge stadium like at Michigan versus smaller ones. I think that refs could also play a big role in this hypothesis so I could look into if there is evidence of home-team bias in officiating calls. 
 
 
 
